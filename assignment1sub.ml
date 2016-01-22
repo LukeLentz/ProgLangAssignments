@@ -13,7 +13,8 @@
    order (and just keeps the first in place).
    It should have type: int * int * int -> int * int * int
 *)
-
+let fixLastTwo ((x, y, z) : int*int*int) =
+	if z < y then (x, z, y) else (x, y, z);;
 
 (*
    Write a function named "order" that takes a triple of integers and
@@ -21,7 +22,11 @@
    You may want to use the function from the previous part.
    It should have type: int * int * int -> int * int * int
 *)
+let order ((x, y, z) : int*int*int) = 
 
+	if x < y && x < z then fixLastTwo (x, y, z)
+	else if y < x && y < z then fixLastTwo (y, x, z)
+	else fixLastTwo (z, y, x);;
 
 (*
    Write a function "distance" that given a pair of integers returns the
@@ -29,6 +34,8 @@
    as is the distance between 4 and 10.
    It should have type: int * int -> int
 *)
+let distance ((x, y) : int*int) =
+	if x < y then y - x else x - y;;
 
 
 
@@ -41,7 +48,8 @@
    It should have type: int * string -> string
    You may see "bytes" instead of "string" as a type.
 *)
-
+let greeting ((age, name) : int*string) =
+	"Greetings " ^ name ^ ", you are " ^ string_of_int(age) ^ " years old!";;
 
 
 (*
@@ -54,7 +62,11 @@
    It should have type: int * string -> string
    You may see "bytes" instead of "string" as a type.
 *)
-
+let greeting2 ((age, name): int*string) = 
+	let greet = "Greetings " ^ name ^ ", you are " in
+		if age <= 0 then greet ^ "not born yet!"
+		else if 1 <= age && age <= 20 then greet ^ "a youngster!"
+		else greet ^ "young at heart!";;
 
 
 (*
@@ -64,7 +76,8 @@
    a string.
    It should have type: int * string -> bool
 *)
-
+let tooShort ((i, s) : int*string) =
+	i > String.length(s);;
 
 
 (*
@@ -72,7 +85,8 @@
    their total length.
    It should have type string * string -> int
 *)
-
+let totalLength ((a, b) : string*string) =
+	String.length(a ^ b);;
 
 
 
@@ -83,7 +97,8 @@
    string more than once.
    It should have type: string * string * string -> bool
 *)
-
+let orderedByLength ((a, b, c) : string*string*string) = 
+	let len = String.length(b) in String.length(a) <= len && len <= String.length(c);;
 
 
 
@@ -94,4 +109,5 @@
    integers more than once.
    It should have type: int * int -> bool
 *)
-
+let prodInRange ((x, y) : int*int) =
+	let prod = x * y in 10 <= prod && prod <= 20;;
