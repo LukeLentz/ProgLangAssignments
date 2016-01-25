@@ -6,6 +6,8 @@ let t1c = getnth (0, ["hi"; "there"; "you"]) = None
 
 let t2a = lookup ("you", []) = None
 let t2b = lookup ("you", [("him", 2); ("you", 3)]) = Some 3
+let t2c = lookup ("you", [("you", 2); ("you", 4)]) = Some 2
+let t2d = lookup ("", [("a", 1); ("", 2)]) = Some 2
 
 let t3a = inPairs [1; 2; 3; 4; 5] = [(1, 2); (3, 4)]
 

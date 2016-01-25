@@ -27,7 +27,9 @@ let getnth ((n, strings) : int * string list) =
    It should have type: string * (string * int) list -> int option
 *)
 let lookup ((s, lis) : string * (string * int) list) =
-	Some 5
+	if List.length lis = 0
+	then None
+	else 
 
 
 
