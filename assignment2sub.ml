@@ -14,7 +14,7 @@
    It should have type: int * string list -> string
 *)
 let getnth ((n, strings) : int * string list) = 
-	"string"
+	List.nth strings (n-1)
 
 
 
