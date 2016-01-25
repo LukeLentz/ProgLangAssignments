@@ -2,6 +2,7 @@ let t1a = getnth (3, ["hi"; "there"; "you"]) = "you"
 let t1b = try (getnth (3, ["hi"; "there"]); false)  with
             | Failure "getnth" -> true
             | _ -> false
+let t1c = getnth (0, ["hi"; "there"; "you"]) = None
 
 let t2a = lookup ("you", []) = None
 let t2b = lookup ("you", [("him", 2); ("you", 3)]) = Some 3
