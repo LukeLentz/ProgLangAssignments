@@ -19,14 +19,27 @@ let t3b = inPairs [] = []
 let t3c = inPairs [1] = []
 
 let t4a = flatten [[1; 2; 3]; []; [4; 5]; [6]] = [1; 2; 3; 4; 5; 6]
+let t4b = flatten [] = []
+let t4c = flatten [[1;2;3]] = [1;2;3]
 
 let t5a = remove (3, [3; 4; 3; 1]) = [4; 1]
+let t5b = remove (1, [2;3;4]) = [2;3;4]
+let t5c = remove (1, [1;1]) = []
+let t5d = remove (2, []) = []
 
 let t6a = removeDups [4; 1; 2; 1; 4; 5; 20] = [4; 1; 2; 5; 20]
+let t6b = removeDups [1;2;3;4] = [1;2;3;4]
+let t6c = removeDups [] = []
+let t6d = removeDups [1] = [1]
+let t6e = removeDups [1;2;1;3;4;1] = [1;2;3;4]
 
 let t7a = collateSome [Some 1; None; Some 2; Some 1; None; Some 3] = [1; 2; 1; 3]
+let t7b = collateSome [None] = []
+let t7c = collateSome [] = []
 
 let t8a = unzip2 [(1, 2); (3, 4); (5, 6)] = ([1; 3; 5], [2; 4; 6])
+let t8b = unzip2 [(1, 1)] = ([1], [1])
+let t8c = unzip2 [] = ([], [])
 
 let t9a = makeChange (20, [8; 3; 2]) = Some [8; 8; 2; 2]
 let t9b = makeChange (20, [8; 3]) = Some [8; 3; 3; 3; 3]

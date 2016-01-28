@@ -67,8 +67,10 @@ let rec inPairs (lis : int list) =
    It should have type: int list list -> int list
 *)
 let rec flatten (lisList : int list list) =
-	List.hd lisList @ flatten (List.tl lisList)
-
+	match lisList with
+	| [] -> []
+	| hd :: [] -> hd
+	| hd :: rest -> hd @ flatten rest
 
 (*
    Write a function `remove` that takes as input a pair of an integer n and a
@@ -99,10 +101,10 @@ let rec remove ((n, lis) : int * int list) =
 
 
 let rec removeDups (lis : int list) =
-	if lis = [] || List.length lis = 1
-	then lis
-	else remove (List.hd lis, List.tl lis)
-	removeDups (List.tl lis)
+		match lis with
+		| [] -> []
+		| hd :: [] -> hd :: []
+		| hd :: rest -> hd :: removeDups (remove (hd, rest))
 
 (*
    Write a function `collateSome` that takes as input a list of int options
@@ -111,8 +113,12 @@ let rec removeDups (lis : int list) =
    collateSome [Some 1; None; Some 2; Some 1; None; Some 3] = [1; 2; 1; 3]
    It should have type: int option list -> int list
 *)
-let collateSome (lis : int option list) =
-	[1;2]
+let rec collateSome (lis : int option list) =
+	match lis with
+	| [] -> []
+	| hd :: rest -> match hd with
+					| None -> collateSome rest
+					| Some i -> i :: collateSome rest
 
 
 
@@ -124,12 +130,15 @@ let collateSome (lis : int option list) =
    It should have type: (int * int) list -> int list * int list
 *)
 let unzip2 (lis : (int * int) list) =
-	match lis with
-	| [] -> []
-	| hd :: rest ->
-	  let lis1 = [] and lis2 = []
-	  in lis1 @ fst hd
-
+	let rec zipFirsts (lis : (int * int) list) =
+		match lis with
+		| [] -> []
+		| hd :: rest -> fst hd :: zipFirsts rest
+	in let rec zipSeconds (lis : (int * int) list) = 
+		match lis with
+		| [] -> []
+		| hd :: rest -> snd hd :: zipSeconds rest
+	in (zipFirsts lis, zipSeconds lis)
 
 
 (*
@@ -147,5 +156,5 @@ let unzip2 (lis : (int * int) list) =
    It should have type: int * int list -> int list option
 *)
 let makeChange ((n, ints) : int * int list) =
-	Some [1;2]
+	Some [1]
 
