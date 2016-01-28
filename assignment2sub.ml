@@ -14,7 +14,9 @@
    It should have type: int * string list -> string
 *)
 let getnth ((n, strings) : int * string list) = 
-	List.nth strings (n-1)
+	if n > List.length strings || n <= 0
+	then raise (Failure "getnth")
+	else List.nth strings (n-1)
 
 
 
@@ -26,10 +28,12 @@ let getnth ((n, strings) : int * string list) =
    pair then it returns "None".
    It should have type: string * (string * int) list -> int option
 *)
-let lookup ((s, lis) : string * (string * int) list) =
+let rec lookup ((s, lis) : string * (string * int) list) =
 	if List.length lis = 0
 	then None
-	else 
+	else if fst @@ List.hd @@ lis = s
+	then Some (snd @@ List.hd @@ lis)
+	else lookup @@ (s, List.tl @@ lis)
 
 
 
@@ -42,9 +46,10 @@ let lookup ((s, lis) : string * (string * int) list) =
    inPairs [1; 2; 3; 4; 5] = [(1, 2); (3, 4)]
    It should have type: int list -> (int * int) list
 *)
-let inPairs (lis : int list) =
-	[(1, 2); (1, 2)]
-
+let rec inPairs (lis : int list) =
+	if List.length lis <= 1
+	then []
+	else (List.hd lis, List.hd @@ List.tl lis) :: inPairs @@ List.tl @@ List.tl lis
 
 
 (*
