@@ -29,11 +29,13 @@ let getnth ((n, strings) : int * string list) =
    It should have type: string * (string * int) list -> int option
 *)
 let rec lookup ((s, lis) : string * (string * int) list) =
-	if List.length lis = 0
-	then None
-	else if fst @@ List.hd @@ lis = s
-	then Some (snd @@ List.hd @@ lis)
-	else lookup @@ (s, List.tl @@ lis)
+	match lis with
+	| [] -> None
+	| hd :: rest ->
+	  let i = Some (snd hd) in
+	  if fst hd = s
+	  then i
+	  else lookup (s, rest)
 
 
 
@@ -49,7 +51,7 @@ let rec lookup ((s, lis) : string * (string * int) list) =
 let rec inPairs (lis : int list) =
 	if List.length lis <= 1
 	then []
-	else (List.hd lis, List.hd @@ List.tl lis) :: inPairs @@ List.tl @@ List.tl lis
+	else (List.hd lis, List.hd (List.tl lis)) :: inPairs (List.tl (List.tl lis))
 	(* 
 	   creates a list of pairs of every two elements in a list by forming a pair of
 	   the head and the next element, or hd of the tl and then recursively calling
@@ -64,8 +66,8 @@ let rec inPairs (lis : int list) =
    flatten [[1; 2; 3]; []; [4; 5]; [6]] = [1; 2; 3; 4; 5; 6]
    It should have type: int list list -> int list
 *)
-let flatten (lisList : int list list) =
-	List.hd lisList @ flatten @@ List.tl lisList
+let rec flatten (lisList : int list list) =
+	List.hd lisList @ flatten (List.tl lisList)
 
 
 (*
@@ -84,7 +86,7 @@ let rec remove ((n, lis) : int * int list) =
 	match lis with
 	| [] -> []
 	| hd :: rest -> 
-	  let tl = remove n rest in
+	  let tl = remove (n, rest) in
 	  if hd = n then tl else hd :: tl
 
 (*
@@ -94,17 +96,13 @@ let rec remove ((n, lis) : int * int list) =
    removeDups [4; 1; 2; 1; 4; 5; 20] = [4; 1; 2; 5; 20]
    It should have type: int list -> int list
 *)
-(*
-	Uses remove and recursive calls of removeDups on the 
-	given lists' tail to get rid of duplicates in a list. 
-	By calling remove on the tail, it retains the original 
-	instance of the int.
-*)
-let removeDups (lis : int list) =
-	remove (List.hd lis, List.tl lis)
-	removeDups List.tl lis
 
 
+let rec removeDups (lis : int list) =
+	if lis = [] || List.length lis = 1
+	then lis
+	else remove (List.hd lis, List.tl lis)
+	removeDups (List.tl lis)
 
 (*
    Write a function `collateSome` that takes as input a list of int options
@@ -126,7 +124,11 @@ let collateSome (lis : int option list) =
    It should have type: (int * int) list -> int list * int list
 *)
 let unzip2 (lis : (int * int) list) =
-	([1;2], [3;4])
+	match lis with
+	| [] -> []
+	| hd :: rest ->
+	  let lis1 = [] and lis2 = []
+	  in lis1 @ fst hd
 
 
 
