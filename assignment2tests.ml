@@ -5,7 +5,7 @@ let t1b = try (getnth (3, ["hi"; "there"]); false)  with
 let t1c = try (getnth (0, ["hi"; "there"; "you"]); false) with
 			| Failure "getnth" -> true
 			| _ -> false
-let tle = try (getnth (0, []); false) with
+let t1e = try (getnth (0, []); false) with
 			| Failure "getnth" -> true
 			| _ -> false
 

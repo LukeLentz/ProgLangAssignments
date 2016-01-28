@@ -50,6 +50,11 @@ let rec inPairs (lis : int list) =
 	if List.length lis <= 1
 	then []
 	else (List.hd lis, List.hd @@ List.tl lis) :: inPairs @@ List.tl @@ List.tl lis
+	(* 
+	   creates a list of pairs of every two elements in a list by forming a pair of
+	   the head and the next element, or hd of the tl and then recursively calling
+	   inPairs in the list constructor on the remainder of the tail, or the tl of the tl
+	*)
 
 
 (*
@@ -60,7 +65,7 @@ let rec inPairs (lis : int list) =
    It should have type: int list list -> int list
 *)
 let flatten (lisList : int list list) =
-	[1;2]
+	List.hd lisList @ flatten @@ List.tl lisList
 
 
 (*
@@ -68,9 +73,19 @@ let flatten (lisList : int list list) =
    list of integers, and removes from that list any occurrence of n.
    It should have type: int * int list -> int list
 *)
-let remove ((n, lis) : int * int list) =
-	[1;2]
-
+(*
+	Base case: if list is empty, return empty list
+	Recursion: tl will be a recursive call to remove
+	where if hd is n, it returns the recursive call on rest
+	but if hd != n it retains hd and calls remove on rest,
+	preventing the function from removing the entire list
+*)
+let rec remove ((n, lis) : int * int list) =
+	match lis with
+	| [] -> []
+	| hd :: rest -> 
+	  let tl = remove n rest in
+	  if hd = n then tl else hd :: tl
 
 (*
    Write a function `removeDups` that takes a list of integers and returns a
@@ -79,8 +94,15 @@ let remove ((n, lis) : int * int list) =
    removeDups [4; 1; 2; 1; 4; 5; 20] = [4; 1; 2; 5; 20]
    It should have type: int list -> int list
 *)
+(*
+	Uses remove and recursive calls of removeDups on the 
+	given lists' tail to get rid of duplicates in a list. 
+	By calling remove on the tail, it retains the original 
+	instance of the int.
+*)
 let removeDups (lis : int list) =
-	[1;2]
+	remove (List.hd lis, List.tl lis)
+	removeDups List.tl lis
 
 
 
