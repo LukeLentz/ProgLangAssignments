@@ -1,6 +1,15 @@
-let t1a = result (Rock, Paper) = SndWin
+let t1a = result (Rock, Rock) = Tie
+let t1b = result (Paper, Paper) = Tie
+let t1c = result (Scissors, Scissors) = Tie
+let t1d = result (Paper, Rock) = FstWin
+let t1e = result (Rock, Paper) = SndWin
+let t1f = result (Rock, Scissors) = FstWin
+let t1g = result (Scissors, Rock) = SndWin
+let t1h = result (Scissors, Paper) = FstWin
+let t1i = result (Paper, Scissors) = SndWin
 
 let t2a = is_tie (Rock, Paper) = false
+let t2b = is_tie (Rock, Rock) = true
 
 let t3a = game_from_plays ([Rock; Paper; Rock], [Scissors; Rock; Rock]) =
                [(Rock, Scissors); (Paper, Rock); (Rock, Rock)]

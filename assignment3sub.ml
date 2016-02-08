@@ -53,7 +53,9 @@ type play = shape list
 *)
 let result check =
    match check with
-   | (x, x) -> Tie
+   | (Rock, Rock)
+   | (Paper, Paper)
+   | (Scissors, Scissors) -> Tie
    | (Rock, y) -> if y = Paper then SndWin else FstWin
    | (Paper, y) -> if y = Scissors then SndWin else FstWin
    | (Scissors, y) -> if y = Rock then SndWin else FstWin
@@ -65,8 +67,8 @@ let result check =
    whether the check's result is a tie.
    Type: check -> bool
 *)
-
-
+let is_tie check =
+	result check = Tie
 
 
 (*
