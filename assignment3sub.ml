@@ -78,6 +78,13 @@ let is_tie check =
    other, stop at the shortest one.
    Type: play * play -> game
 *)
+let rec game_from_plays (plays1, plays2) : game =
+	match plays1 with
+	| [] -> []
+	| hd :: rest -> match plays2 with
+					| [] -> []
+					| hd' :: rest' -> (hd, hd') :: game_from_plays (rest, rest')
+	
 
 
 
