@@ -15,8 +15,16 @@ let t3a = game_from_plays ([Rock; Paper; Rock], [Scissors; Rock; Rock]) = [(Rock
 let t3b = game_from_plays ([Rock; Paper], [Rock; Scissors; Scissors]) = [(Rock, Rock); (Paper, Scissors)]
 
 let t4a = valid_game [(Rock, Scissors)] = true
+let t4b = valid_game [(Rock, Rock)] = false
+let t4c = valid_game [(Rock, Scissors); (Paper, Rock)] = false
+let t4d = valid_game [(Paper, Paper); (Scissors, Scissors)] = false
+let t4e = valid_game [(Rock, Rock); (Rock, Paper)] = true
+let t4f = valid_game [] = true
 
 let t5a = play_game [(Rock, Rock); (Scissors, Rock)] = SndWin
+let t5b = play_game [(Rock, Rock)] = Tie
+let t5c = play_game [] = Tie
+let t5d = play_game [(Scissors, Paper); (Paper, Paper); (Rock, Paper)] = FstWin
 
 let t6a = to_f (F 2.3) = 2.3
 

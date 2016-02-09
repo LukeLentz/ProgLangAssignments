@@ -109,7 +109,12 @@ let rec valid_game game =
    Write a function `play_game` that plays the game as described above.
    Type: game -> result
 *)
-
+let rec play_game game =
+	match game with
+	| [] -> Tie (* No game was played/inconclusive, so it is a tie *)
+	| hd :: rest -> if result hd = Tie
+					then play_game rest
+				    else result hd
 
 (* --------------------------------------
             TEMPERATURES
