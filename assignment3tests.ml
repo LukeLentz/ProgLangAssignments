@@ -35,8 +35,14 @@ let t7b = temp_compare (F 2.3, F 2.3) = 0
 let t7c = temp_compare (F 3.0, F 2.0) = 1
 
 let t8a = string_of_temp (C 2.3) = "2.3 C"
-let t8b = string_of_temp (F 5.0) = "5.0 F"
+let t8b = string_of_temp (F 5.0) = "5. F"
 
 let t9a = max_temp [F 2.1; C 2.1] = C 2.1
+let t9b = try max_temp [] with
+		  | Failure "max_temp" -> true
+		  | _ -> false
+
+let t9c = max_temp [F 4.2] = F 4.2
+let t9d = max_temp [C 0; F 40; C 100] = C 100
 
 let t10a = max_temp2 [F 2.1; C 2.1] = C 2.1

@@ -177,6 +177,14 @@ let string_of_temp temp =
    if the list is empty.
    Type: temp list -> temp
 *)
+let rec max_temp temps =
+	match temps with
+	| [] -> raise (Failure "max_temp")
+	| hd :: rest -> match rest with
+					| [] -> hd (* if only one element, simply return it *)
+					| hd' :: rest' -> if to_f hd' > to_f hd (* convert for accurate comparison *)
+									  then max_temp rest (* if the second el is bigger, call max_temps on everything after first el *)
+									  else max_temp (hd :: rest') (* otherwise, remove the second el and call max_temps again *)
 (*
    Write a function `max_temp2` that behaves like `max_temp` but where all the
    recursive calls are tail calls. You will likely need to define an auxiliary
