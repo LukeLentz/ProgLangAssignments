@@ -164,7 +164,10 @@ let temp_compare (temp1, temp2) =
    to strings.
    Type: temp -> string
 *)
-
+let string_of_temp temp =
+	match temp with
+	| C f -> (string_of_float f) ^ " C"
+	| F f -> (string_of_float f) ^ " F"
 
 
 
