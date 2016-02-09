@@ -80,10 +80,11 @@ let is_tie check =
 *)
 let rec game_from_plays (plays1, plays2) : game =
 	match plays1 with
-	| [] -> []
+	| [] -> [] (* if plays1 is finished, end the list constuctor *)
 	| hd :: rest -> match plays2 with
-					| [] -> []
-					| hd' :: rest' -> (hd, hd') :: game_from_plays (rest, rest')
+					| [] -> [] (* same, but for plays2 *)
+					| hd' :: rest' -> (hd, hd') :: game_from_plays (rest, rest') 
+					(* otherwise, recursively call the fun. to create the list *)
 	
 
 
@@ -93,7 +94,15 @@ let rec game_from_plays (plays1, plays2) : game =
    a valid game as described above.
    Type: game -> bool
 *)
-
+let rec valid_game game =
+	match game with
+	| [] -> true (* returns true for empty games *)
+	| hd :: [] -> if result hd = Tie (* returns false if ending in a tie *)
+				  then false
+				  else true (* otherwise, we have gone through the entire game and can return true *)
+	| hd :: rest -> if result hd != Tie (* returns false if continuing after a win *)
+					then false
+					else valid_game rest (* if game ties, continue validating *)
 
 
 (*
