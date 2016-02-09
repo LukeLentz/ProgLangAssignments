@@ -146,7 +146,14 @@ let to_f temp =
    equal and -1 if the second temperature is higher.
    Type: temp * temp -> int
 *)
-
+let temp_compare (temp1, temp2) =
+	(* first convert to fahrenheit *)
+	let pr = (to_f temp1, to_f temp2) in
+	if fst pr > snd pr
+	then 1
+	else if fst pr = snd pr
+	then 0
+	else -1
 
 
 (*
