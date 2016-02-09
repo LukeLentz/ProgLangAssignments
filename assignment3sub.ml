@@ -135,7 +135,10 @@ type temp = C of float | F of float
    them to distinguish from the integer ones. For example "2.1 +. 5.2"
    Type: temp -> float
 *)
-
+let to_f temp =
+	match temp with
+	| F f -> f
+	| C f -> 1.8 *. f +. 32.0
 
 (*
    Write a function `temp_compare` that takes as input a pair of temperatures and
