@@ -190,3 +190,4 @@ let rec max_temp temps =
    recursive calls are tail calls. You will likely need to define an auxiliary
    function and use state recursion.
 *)
+(* max_temp is already like this *)
