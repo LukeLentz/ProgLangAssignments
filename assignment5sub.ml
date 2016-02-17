@@ -154,7 +154,7 @@ let term (a, n) =
 	else if a = 1
 	then power (Var, n)
 	else if n = 0
-	then a
+	then Int a
 	else Mul (a, power (Var, n))
 
 (*
@@ -176,8 +176,12 @@ let term (a, n) =
    It should have type: (int * int) list -> calc
 *)
 let poly lis =
-	Int 0
-
+	match lis with
+	| [] -> Int 0
+	| (a, n) :: [] -> term (a, n) (* halts recursion at single el *)
+	| (a, n) :: (a', n') :: tl -> if a = 0
+								  then poly (a', n') :: tl (* skip if coeff is 0 *)
+								  else term (a, n) + poly (a', n') :: tl
 
 (*
    This is a difficult problem, with many objectives. Do as much of it as you can.
