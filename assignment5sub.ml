@@ -149,7 +149,13 @@ let rec power (c, n) =
    It should have type: int * int -> calc
 *)
 let term (a, n) =
-	Int 0
+	if a = 0
+	then Int 0
+	else if a = 1
+	then power (Var, n)
+	else if n = 0
+	then a
+	else Mul (a, power (Var, n))
 
 (*
    Write a function `poly` that takes as input a list of pairs of integers
