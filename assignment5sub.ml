@@ -87,8 +87,6 @@ let rec count_vars c =
    described above.
    It should have type: calc * int -> int
 *)
-let calc_eval (c, x) =
-	0
 
 
 (*
@@ -113,6 +111,9 @@ let subst (c1, c2) =
 	match c2 with
 	| Var -> c1
 	| Parity Var -> Parity c1
+	| Add (Var, Var) -> Add (c1, c1)
+	| Sub (Var, Var) -> Sub (c1, c1)
+	| Mul (Var, Var) -> Mul (c1, c1)
 	| Add (Var, x) | Add (x, Var) -> Add (c1, x)
 	| Sub (Var, x) | Sub (x, Var) -> Sub (c1, x)
 	| Mul (Var, x) | Mul (x, Var) -> Mul (c1, x)
@@ -130,10 +131,12 @@ let subst (c1, c2) =
    n = 1, when the result should be the calculation itself.
    It should have type: calc * int -> calc
 *)
-let power (c, n) =
-	Int 0
-
-
+let rec power (c, n) =
+	if n = 0
+	then Int 1
+	else if n = 1
+	then c
+	else Mul (c, power (c, n - 1))
 (*
    Write a function `term` that takes as input a pair of integers `(a, n)` and
    returns the calculation representing the "term" `a * x^n` ("a" times the
