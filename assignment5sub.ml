@@ -49,7 +49,14 @@ type calc = Var
 *)
 let has_vars c =
 	match c with
-	| Var -> true
+	| Var
+	| Add (Var, _)
+	| Add (_, Var)
+	| Sub (Var, _)
+	| Sub (_, Var)
+	| Mul (Var, _)
+	| Mul (_, Var)
+	| Parity Var -> true
 	| _ -> false
 
 (*
