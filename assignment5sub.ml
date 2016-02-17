@@ -113,7 +113,7 @@ let calc_eval (c, x) =
    (though the parentheses will not show)
 *)
 let func_of_calc c =
-	fun () -> 0
+	fun (x) -> calc_eval (c, x)
 
 
 (*
@@ -190,13 +190,13 @@ let term (a, n) =
    cases.
    It should have type: (int * int) list -> calc
 *)
-let poly lis =
+let rec poly lis =
 	match lis with
 	| [] -> Int 0
 	| (a, n) :: [] -> term (a, n) (* halts recursion at single el *)
 	| (a, n) :: (a', n') :: tl -> if a = 0
-								  then poly (a', n') :: tl (* skip if coeff is 0 *)
-								  else term (a, n) + poly (a', n') :: tl
+								  then poly ((a', n') :: tl) (* skip if coeff is 0 *)
+								  else Add (term (a, n), poly ((a', n') :: tl))
 
 (*
    This is a difficult problem, with many objectives. Do as much of it as you can.

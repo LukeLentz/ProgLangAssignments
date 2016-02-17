@@ -8,7 +8,7 @@ let t9b = count_vars (Add (Int 1, Int 2)) = 0
 
 let t10a = calc_eval (Add (Var, Int 2), 3) = 5
 
-(*let t11a = func_of_calc (Add (Var, Int 2)) 3 = 5 *)
+let t11a = func_of_calc (Add (Var, Int 2)) 3 = 5
 
 let t12a = subst (Add (Var, Int 1), Mul (Var, Var)) = Mul (Add (Var, Int 1), Add (Var, Int 1))
 
