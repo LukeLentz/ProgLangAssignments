@@ -110,7 +110,13 @@ let func_of_calc c =
    It should have type: calc * calc -> calc
 *)
 let subst (c1, c2) =
-	Int 0
+	match c2 with
+	| Var -> c1
+	| Parity Var -> Parity c1
+	| Add (Var, x) | Add (x, Var) -> Add (c1, x)
+	| Sub (Var, x) | Sub (x, Var) -> Sub (c1, x)
+	| Mul (Var, x) | Mul (x, Var) -> Mul (c1, x)
+	| _ -> c2
 
 
 (*
