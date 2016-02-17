@@ -47,7 +47,10 @@ type calc = Var
    it. Do NOT use the `count_vars` that follows.
    It should have type calc -> bool
 *)
-
+let has_vars c =
+	match c with
+	| Var -> true
+	| _ -> false
 
 (*
    Write a function `count_vars` that takes as input a calculation and returns the
