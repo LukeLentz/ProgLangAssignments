@@ -87,7 +87,22 @@ let rec count_vars c =
    described above.
    It should have type: calc * int -> int
 *)
-
+let calc_eval (c, x) =
+	match c with
+	(* where a is an Int *)
+	| Var -> x
+	| Int a -> a
+	| Add (Var, Int a)
+	| Add (Int a, Var) -> a + x
+	| Add (Int a, Int b) -> a + b
+	| Sub (Var, Int a) -> x - a
+	| Sub (Int a, Var) -> a - x
+	| Sub (Int a, Int b) -> a - b
+	| Mul (Int a, Var)
+	| Mul (Var, Int a) -> a * x
+	| Mul (Int a, Int b) -> a * b
+	| Parity Var -> x mod 2
+	| Parity (Int a) -> a mod 2
 
 (*
    Write a function `func_of_calc` that takes as input a calculation and returns
@@ -155,7 +170,7 @@ let term (a, n) =
 	then power (Var, n)
 	else if n = 0
 	then Int a
-	else Mul (a, power (Var, n))
+	else Mul (Int a, power (Var, n))
 
 (*
    Write a function `poly` that takes as input a list of pairs of integers
