@@ -64,7 +64,8 @@ let has_vars c =
    number of references to the variable in that calculation. Do NOT use `has_vars`.
    It should have type: calc -> int
 *)
-
+let count_vars c =
+	0
 
 (*
    Write a function `calc_eval` that takes as input a pair of a calculation and an
@@ -72,7 +73,8 @@ let has_vars c =
    described above.
    It should have type: calc * int -> int
 *)
-
+let calc_eval (c, x) =
+	0
 
 
 (*
@@ -83,7 +85,8 @@ let has_vars c =
    It should have type: calc -> (int -> int)
    (though the parentheses will not show)
 *)
-
+let func_of_calc c =
+	fun () -> 0
 
 
 (*
@@ -92,7 +95,8 @@ let has_vars c =
    the variable in c2 with c1.
    It should have type: calc * calc -> calc
 *)
-
+let subst (c1, c2) =
+	Int 0
 
 
 (*
@@ -106,7 +110,8 @@ let has_vars c =
    n = 1, when the result should be the calculation itself.
    It should have type: calc * int -> calc
 *)
-
+let power (c, n) =
+	Int 0
 
 
 (*
@@ -120,7 +125,8 @@ let has_vars c =
    - When the coefficient "a" is 1.
    It should have type: int * int -> calc
 *)
-
+let term (a, n) =
+	Int 0
 
 (*
    Write a function `poly` that takes as input a list of pairs of integers
@@ -140,7 +146,8 @@ let has_vars c =
    cases.
    It should have type: (int * int) list -> calc
 *)
-
+let poly lis =
+	Int 0
 
 
 (*
