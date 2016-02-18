@@ -249,15 +249,30 @@ let rec poly lis =
 (* This function stub is commented out for now so as not to throw errors when
    you work on the previous part. Delete the comment part when you want to start
    working on this function.
+*)
 
 let rec simplify c =
    let c' =
       match c with
-      | Var -> ...        (* this one's easy *)
-      | Int i -> ...      (* so is this *)
-      | Add ... -> ...    (* special add case here *)
-      | Add (c1, c2) -> Add (simplify c1, simplify c2)
+      | Parity x -> Parity (simplify x)
+      | Var -> Var
+      | Int i -> Int i      (* so is this *)
+      | Add (i, n) -> if i = Int 0
+                             then n
+                             else if n = Int 0
+                             then i
+                             else Add (simplify i, simplify n)
+      | Sub (c, Int i) -> if i = 0
+                                  then simplify c
+                                  else simplify (Add (c, (Int (-i) ))) (* c catches Vars, Ints, and other calcs *)
+      | Sub (c1, c2) -> Sub (simplify c1, simplify c2)
+      | Mul (c1, c2) -> if c1 = Int 1
+                                 then c2
+                                 else if c2 = Int 1
+                                 then c1
+                                 else if (c1 = Int 0 ) || (c2 = Int 0)
+                                 then Int 0
+                                 else Mul (simplify c1, simplify c2)
    (* more cases here. Do not use the catchall *)
    in if c' = c then c' else simplify c'
 
-*)
