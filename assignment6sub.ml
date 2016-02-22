@@ -121,6 +121,11 @@ let take1 (St th) =      (* Pattern match on the stream variant. *)
    returns a list of the first n elements of the stream (and the empty list if n<=0).
    It should have type `int -> 'a stream -> 'a list`.
 *)
+let rec take (n, st) =
+    if n <= 0
+    then []
+    else take1 st
+    take (n - 1, st)
 
 
 (*
