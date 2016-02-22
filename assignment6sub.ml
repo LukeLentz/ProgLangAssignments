@@ -124,8 +124,7 @@ let take1 (St th) =      (* Pattern match on the stream variant. *)
 let rec take (n, st) =
     if n <= 0
     then []
-    else take1 st
-    take (n - 1, st)
+    else take1 st :: take (n - 1, st)
 
 
 (*
