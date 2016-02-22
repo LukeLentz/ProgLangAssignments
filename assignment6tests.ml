@@ -1,5 +1,5 @@
 (* These tests assume that you have implemented the function `take` as suggested *)
-let t1a = take (4, (const 3))= [3; 3; 3; 3]
+let t1a = take 4 (const 3) = [3; 3; 3; 3]
 
 let t2a = take 5 (alt 3 4) = [3; 4; 3; 4; 3]
 

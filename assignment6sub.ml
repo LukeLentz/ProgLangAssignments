@@ -79,8 +79,8 @@ let take1 (St th) =      (* Pattern match on the stream variant. *)
    a stream of type `'a stream` that keeps producing that value over and over.
    It should have type `'a -> 'a stream`.
 *)
-let const a =
-    St (fun() -> a)
+let rec const a =
+    St (fun () -> (a, const a))
 
 
 (*
@@ -88,6 +88,10 @@ let const a =
    a stream of type `'a stream` that keeps alternating between those two values.
    It should have type `'a -> 'a -> 'a stream`.
 *)
+let rec alt a b =
+    St (fun () -> (a, alt b a))
+
+    
 
 
 
@@ -97,7 +101,8 @@ let const a =
    up by step each time.
    It should have type `int -> int -> int stream`
 *)
-
+let rec seq a step =
+    St (fun () -> (a, seq (a + step) step))
 
 (*
    Write a function `from_f` that takes as input a function `int -> 'a` and returns
@@ -123,10 +128,11 @@ let const a =
    returns a list of the first n elements of the stream (and the empty list if n<=0).
    It should have type `int -> 'a stream -> 'a list`.
 *)
-let rec take (n, st) =
+let rec take n (St th) =
     if n <= 0
     then []
-    else take1 st :: take (n - 1, st)
+    else let (v, st') = th() in
+            v :: take (n - 1) st'
 
 
 (*
