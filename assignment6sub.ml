@@ -109,6 +109,9 @@ let rec seq a step =
    an `'a stream` that produces in turn the values f 1, f 2, f 3 and so on.
    It should have type `(int -> 'a) -> 'a stream`.
 *)
+let rec from_f f =
+    
+
 
 (*
    Write a function `from_list` that takes as input an `'a list` and returns a stream
