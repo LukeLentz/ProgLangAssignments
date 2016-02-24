@@ -175,7 +175,6 @@ let rec prepend lis st =
    It should have type `('a -> 'b) -> 'a stream -> 'b stream`.
 *)
 
-
 (*
    Write a function `pair_up` that takes as input a `'a stream` and returns a
    `('a * 'a) stream` whose values are consecutive pairs of values from the original
@@ -183,7 +182,9 @@ let rec prepend lis st =
    would have values (1, 2), (3, 4), (5, 6), ...
    It should have type `'a stream -> ('a * 'a) stream`.
 *)
-
+let rec pair_up st =
+    (* use drop and take1 to get vals *)
+    St(fun () -> (( (take1 st, take1 (drop 1 st)), pair_up (drop 2 st))))
 
 (*
    Write a function `zip2` that takes as input a `'a stream` and a `'b stream` and
