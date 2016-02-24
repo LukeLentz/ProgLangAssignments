@@ -148,6 +148,11 @@ let rec take n (St th) =
    So for instance when n<=0 the original stream would be returned.
    It should have type `int -> 'a stream -> 'a stream`.
 *)
+let rec drop n (St th) =
+    if n <= 0
+    then (St th)
+    else let (v, st') = th() in
+            drop (n - 1) st' (* using stucture of take, but simply recursively calls drop without returning a value *)
 
 
 (*
