@@ -161,7 +161,10 @@ let rec drop n (St th) =
    the provided stream.
    It should have type: `'a list -> 'a stream -> 'a stream`.
 *)
-
+let rec prepend lis st =
+    if List.length lis > 0
+    then St(fun () -> (List.hd lis, prepend (List. tl lis) st))
+    else st
 
 (*
    Write a function `map` that takes as input a function `'a -> 'b` and a `'a stream`,
