@@ -113,7 +113,7 @@ let from_f f =
     (* make an accumulator to give input to f *)
     let rec acc f x =
         let y = x + 1 in
-            St(fun () -> (f x, acc f y)) in
+        St(fun () -> (f x, acc f y)) in
     acc f 1
 (*
    Write a function `from_list` that takes as input an `'a list` and returns a stream
@@ -179,7 +179,10 @@ let rec prepend lis st =
    be 1, 4, 9, ...
    It should have type `('a -> 'b) -> 'a stream -> 'b stream`.
 *)
-
+let rec map f st =
+    (* use structure of take to get rest of stream *)
+    let (v, st') = th() in
+    St(fun () -> (f v, map f st'))
 (*
    Write a function `pair_up` that takes as input a `'a stream` and returns a
    `('a * 'a) stream` whose values are consecutive pairs of values from the original
