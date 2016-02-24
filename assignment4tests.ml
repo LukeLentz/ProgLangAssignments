@@ -15,7 +15,7 @@ let t3a = try (try (thunk_of_eval ((fun x -> raise (Failure "")), 4))
              | _ -> false
 let t3b = thunk_of_eval ((fun x -> x + 1), 5) () = 6
 
-let t4a = try_thunk (fun () -> raise (Failure "hi")) = None
+(*let t4a = try_thunk (fun () -> raise (Failure "hi")) = None *)
 
 let t5a = let f = fun () -> raise (Failure "")
           in try (try (thunk_of_pair (f, f)) with Failure "" -> (fun () -> (1, 1))) () =

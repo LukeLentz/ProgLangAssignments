@@ -33,17 +33,15 @@ type 'a thunk = unit -> 'a
    and returns the `'a thunk` from it. This is an incredibly simple function.
    It should have type: (unit -> 'a) -> 'a thunk
 *)
-
-
-
+let thunk f = f
 (*
    Write a function `thunk_of_value` that takes as input a value of type `'a` and
    returns the thunk that if evaluated would produce that value. Again an incredibly
    simple function.
    Should have type: 'a -> 'a thunk
 *)
-
-
+let thunk_of_value v =
+    fun () -> v
 
 (*
    Write a function `thunk_of_eval` that takes as input a pair of a function `'a -> 'b`
@@ -52,9 +50,8 @@ type 'a thunk = unit -> 'a
    is not applied until the thunk is evaluated.
    It should have type: ('a -> 'b) * 'a -> 'a thunk
 *)
-
-
-
+let thunk_of_eval (f, x) =
+    fun () -> f x
 
 (*
    Write a function `try_thunk` that takes as input a `'a thunk` and returns a value of
@@ -66,7 +63,6 @@ type 'a thunk = unit -> 'a
 *)
 
 
-
 (*
    Write a function `thunk_of_pair` that takes as input a pair of thunks, and returns
    the thunk that if evaluated would produce the pair of values that those two thunks
@@ -74,7 +70,8 @@ type 'a thunk = unit -> 'a
    returned thunk is called.
    It should have type: 'a thunk * 'b thunk -> ('a * 'b) thunk
 *)
-
+let thunk_of_pair (thunk1, thunk2) =
+    fun () -> (thunk1 (), thunk2 ())
 
 
 (*
@@ -85,8 +82,9 @@ type 'a thunk = unit -> 'a
    the returned thunk is called.
    It should have type: 'a thunk * ('a -> 'b) -> 'b thunk
 *)
-
-
+let thunk_map (th, f) =
+    let e = th() in
+    fun () -> f e
 
 (*
    Write a function `thunk_of_list` that takes as input a list of `'a thunk`s and
@@ -96,7 +94,11 @@ type 'a thunk = unit -> 'a
    called.
    It should have type: 'a thunk list -> 'a list thunk
 *)
-
+let thunk_of_list thlist =
+    let rec f lis = match thlist with
+                | [] -> []
+                | hd :: tl -> hd() :: f tl
+    in fun () -> f thlist
 
 
 
@@ -134,7 +136,6 @@ type 'a thunk = unit -> 'a
    These lookup tables are often called symbol tables, and we will call the string
    keys symbols via a type alias.
 *)
-
 type symbol = string
 type 'a table = (symbol * 'a) list
 
@@ -149,6 +150,12 @@ let empty : 'a table = []   (* A more intuitive notation for the empty list/tabl
    insert (empty, "foo", 3) = [("foo", 3)]
    It should have type: 'a table * symbol * 'a -> 'a table
 *)
+let rec insert (tab, s, v) = (*takes a table, symbol, and value*)
+    match tab with
+    | [] -> (s, v) :: []
+    | (s', v') :: tl -> if s < s'
+                        then (s, v) :: (s', v') :: tl
+                        else (s', v') :: insert (tl, s, v)
 
 
 
@@ -160,8 +167,15 @@ let empty : 'a table = []   (* A more intuitive notation for the empty list/tabl
    keys are bigger than the searched-for key there is no need to continue the search.
    It should have type: 'a table * symbol -> bool
 *)
-
-
+let rec has (tab, s) =
+    match tab with
+    | [] -> false
+    | (s', v) :: tl -> if s' = s (* if the condition is met, retrun true *)
+                       then true
+                       else if s' > s (* if s can be further in, recursively call has *)
+                       then false  (*otherwise, the table cannot conatin the key s *)
+                       else has (tl, s)
+ 
 
 (*
    Write a function `lookup` that takes as input a pair of a symbol table and a
@@ -172,7 +186,14 @@ let empty : 'a table = []   (* A more intuitive notation for the empty list/tabl
    It should not look any further in the list than is necessary.
    It should have type: 'a table * symbol -> 'a
 *)
-
+let rec lookup (tab, s) =
+    match tab with
+    | [] -> raise Not_found
+    | (s', v) :: tl -> if s = s'
+                       then v
+                       else if  s' > s
+                       then raise Not_found
+                       else lookup (tl, s)
 
 
 (*
@@ -184,7 +205,14 @@ let empty : 'a table = []   (* A more intuitive notation for the empty list/tabl
    It should not look any further in the list than is necessary.
    It should have type: 'a table * symbol -> 'a option
 *)
-
+let rec lookup_opt (tab, s) =
+    match tab with
+    | [] -> None
+    | (s', v) :: tl -> if s = s'
+                       then Some v
+                       else if s' > s
+                       then None
+                       else lookup_opt (tl, s)
 
 
 (*
@@ -194,7 +222,12 @@ let empty : 'a table = []   (* A more intuitive notation for the empty list/tabl
    It should not use `has` or any of the other functions.
    It should have type: 'a table * symbol -> 'a table
 *)
-
+let rec delete (tab, s) =
+    match tab with
+    | [] -> []
+    | (s', v) :: tl -> if s = s' || s' > s
+                       then tl
+                       else (s', v) :: delete (tl, s)
 
 
 (*
@@ -202,7 +235,10 @@ let empty : 'a table = []   (* A more intuitive notation for the empty list/tabl
    of the keys in the table.
    It should have type: 'a table -> symbol list
 *)
-
+let rec keys tab =
+    match tab with
+    | [] -> []
+    | (s, v) :: tl -> s :: keys tl
 
 
 (*
@@ -211,4 +247,10 @@ let empty : 'a table = []   (* A more intuitive notation for the empty list/tabl
    maintained that they keys appear in strictly increasing order.
    It should have type: 'a table -> bool
 *)
-
+let rec is_proper tab =
+    match tab with
+    | [] -> true
+    | hd :: [] -> true (* if empty or at end, then true *)
+    | (s, v) :: (s', v') :: tl -> if s > s'
+                                  then false
+                                  else is_proper ((s', v') :: tl)
