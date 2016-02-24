@@ -109,7 +109,12 @@ let rec seq a step =
    an `'a stream` that produces in turn the values f 1, f 2, f 3 and so on.
    It should have type `(int -> 'a) -> 'a stream`.
 *)
-
+let from_f f =
+    (* make an accumulator to give input to f *)
+    let rec acc f x =
+        let y = x + 1 in
+            St(fun () -> (f x, acc f y)) in
+    acc f 1
 (*
    Write a function `from_list` that takes as input an `'a list` and returns a stream
    that produces the elements in the list one at a time, then starts all over. For
@@ -191,7 +196,8 @@ let rec pair_up st =
    returns a `('a * 'b) stream` by pairing together the corresponding values.
    It should have type `'a stream -> 'b stream -> ('a * 'b) stream`.
 *)
-
+let rec zip2 st1 st2 =
+    St(fun () -> ( (take1 st1, take1 st2), zip2 (drop 1 st1) (drop 1 st2)))
 
 (*
    Write a function `accum` that takes as input a function `'b -> 'a -> 'b`, an initial
@@ -201,7 +207,6 @@ let rec pair_up st =
    then the resulting stream would be 5, 6, 8, 11, 15, 20, ...
    It should have type `('b -> 'a -> 'b) -> 'b -> 'a stream -> 'b stream`.
 *)
-
 
 (*
    Write a function `filter` that takes as input a predicate function `'a -> bool` and
