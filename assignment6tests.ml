@@ -21,16 +21,16 @@ let t8a = take 6 (map (fun x -> x * x) (seq 1 1)) = [1; 4; 9; 16; 25; 36]
 (* The next test ensures that the function is not called until the corresponding
    value is actually needed. *)
 let t8b = try (ignore (map (fun _ -> raise (Failure "")) (seq 1 1)); true) with
-          | _ -> false *)
+          | _ -> false
 
 let t9a = take 3 (pair_up (seq 1 1)) = [(1, 2); (3, 4); (5, 6)]
 
 let t10a = take 3 (zip2 (seq 1 2) (seq 2 3)) = [(1, 2); (3, 5); (5, 8)]
 
-(*let t11a = take 4 (accum (+) 0 (seq 1 1)) = [0; 1; 3; 6]
+let t11a = take 4 (accum (+) 0 (seq 1 1)) = [0; 1; 3; 6]
 
 let t12a = take 4 (filter (fun x -> x mod 2 = 0) (seq 1 1)) = [2; 4; 6; 8]
 
-let t13a = take 3 (collect 3 (seq 1 1)) = [[1; 2; 3]; [4; 5; 6]; [7; 8; 9]] *)
+let t13a = take 3 (collect 3 (seq 1 1)) = [[1; 2; 3]; [4; 5; 6]; [7; 8; 9]]
 
 let t14a = take 5 (flatten (collect 3 (seq 1 1))) = [1; 2; 3; 4; 5]

@@ -179,7 +179,7 @@ let rec prepend lis st =
    be 1, 4, 9, ...
    It should have type `('a -> 'b) -> 'a stream -> 'b stream`.
 *)
-let rec map f st =
+let rec map f (St th) =
     (* use structure of take to get rest of stream *)
     let (v, st') = th() in
     St(fun () -> (f v, map f st'))
@@ -210,7 +210,9 @@ let rec zip2 st1 st2 =
    then the resulting stream would be 5, 6, 8, 11, 15, 20, ...
    It should have type `('b -> 'a -> 'b) -> 'b -> 'a stream -> 'b stream`.
 *)
-
+let rec accum f b (St th) =
+    let (v, st') = th() in 
+    St(fun () ->(b, accum f (f b (take1 (St th))) st'))
 (*
    Write a function `filter` that takes as input a predicate function `'a -> bool` and
    a `'a stream`, and returns a `'a stream` of those values that are true. For instance
