@@ -109,9 +109,6 @@ let rec seq a step =
    an `'a stream` that produces in turn the values f 1, f 2, f 3 and so on.
    It should have type `(int -> 'a) -> 'a stream`.
 *)
-let rec from_f f =
-    
-
 
 (*
    Write a function `from_list` that takes as input an `'a list` and returns a stream
@@ -121,7 +118,14 @@ let rec from_f f =
    in search of the (nonexistent) next value, and that is OK.
    It should have type `'a list -> 'a stream`.
 *)
-
+let from_list lis =
+    let ogLis (* the original list *) = lis in
+    let rec aux lis = 
+        match lis with
+        | [] -> St(fun () -> (List.hd lis, aux lis)) (* using List.hd instead of [] gives the correct type sig *)
+        | hd :: [] -> St(fun () -> (hd, aux (ogLis)))
+        | hd :: tl -> St(fun () -> (hd, aux tl)) in
+    aux lis
 
 (* Stream users. These functions take as input a stream, and either produce some value
    or a new stream.
