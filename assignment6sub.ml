@@ -248,4 +248,11 @@ let rec collect n st =
    the lists are empty.
    It should have type: `'a list stream -> 'a stream`,
 *)
-
+let rec flatten (St th) =
+    let (v, st') = th() in
+    let rec aux lis (St th) =
+        match lis with
+        | [] -> St(fun () -> (List.hd lis, flatten st'))
+        | hd :: [] -> St(fun () -> (hd, flatten st'))
+        | hd :: tl -> St(fun () -> (hd, aux tl st')) in
+    aux (take1 (St th)) (St th)
