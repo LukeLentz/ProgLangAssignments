@@ -222,7 +222,12 @@ let rec accum f b (St th) =
    value, if for example the predicate returns always false.
    It should have type `('a -> bool) -> 'a stream -> 'a stream`.
 *)
-
+let rec filter f (St th) =
+    (* use multiple recursions until it finds a true value *)
+    let (v, st') = th() in
+    if f v
+    then St(fun () -> (v, filter f st'))
+    else filter f st'
 
 (*
    Write a function `collect` that takes as input an integer `n > 0` and a `'a stream`
@@ -231,7 +236,8 @@ let rec accum f b (St th) =
    then `collect 3 st` is the stream [1;2;3], [4;5;6], [7;8;9], ...
    It should have type `int -> 'a stream -> 'a list stream`.
 *)
-
+let rec collect n st =
+    St(fun () -> (take n st, collect n (drop n st)))
 
 (*
    Write a function `flatten` that takes as input a `'a list stream` and "flattens" it
