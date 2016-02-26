@@ -68,6 +68,10 @@ let dims_pic pic =
    | [] -> (0, 0)
    | row :: _ -> (List.length pic, List.length row)
 
+let string_of_pxl pxl =
+   match pxl with
+   | D -> "."
+   | H -> "#"
 (*
    Add your other functions here
 *)
