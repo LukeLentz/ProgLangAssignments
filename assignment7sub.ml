@@ -14,6 +14,8 @@
    Place your "helpers" implementations here.
 *)
 let rec range a b = if a > b then [] else a :: range (a + 1) b
+let range1 a = range 1 a
+let tabulate f n = f range1 n
 
 
 
