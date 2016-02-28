@@ -94,3 +94,6 @@ let string_of_pic p =
 
 let flip_vertical p =
    List.rev p
+
+let flip_horizontal p =
+   List.map (List.rev) p
