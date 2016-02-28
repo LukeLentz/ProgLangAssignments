@@ -53,7 +53,18 @@ let sword = [
 (*
    You need to fix this.
 *)
-let doodad = []
+let doodad =[
+[D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D];
+[D;D;D;D;D;D;D;H;D;D;D;D;D;D;D;D];
+[D;D;D;D;D;D;H;H;H;D;D;D;D;D;D;D];
+[D;D;D;D;D;H;H;H;H;H;D;D;D;D;D;D];
+[D;D;D;D;H;H;H;H;H;H;H;D;D;D;D;D];
+[D;D;D;H;H;H;H;H;H;H;H;H;D;D;D;D];
+[D;D;D;D;H;H;H;H;H;H;H;D;D;D;D;D];
+[D;D;D;D;D;H;H;H;H;H;D;D;D;D;D;D];
+[D;D;D;D;D;D;H;H;H;D;D;D;D;D;D;D];
+[D;D;D;D;D;D;D;H;D;D;D;D;D;D;D;D];
+[D;D;D;D;D;D;D;D;D;D;D;D;D;D;D;D]]
 
 (*
    These two functions provided to you. Study how they work before continuing!
@@ -72,6 +83,11 @@ let string_of_pxl pxl =
    match pxl with
    | D -> "."
    | H -> "#"
-(*
-   Add your other functions here
-*)
+
+let string_of_row r =
+   let s = List.map (string_of_pxl) r in
+   (List.fold_left (^) "" s) ^ "\n"
+
+let string_of_pic p =
+   let s = List.map (string_of_row) p in
+   List.fold_left (^) "" s
