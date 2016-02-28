@@ -100,3 +100,9 @@ let flip_horizontal p =
 
 let flip_both p =
    flip_vertical (flip_horizontal p)
+
+let mirror_vertical p =
+   p @ (flip_vertical p)
+
+let mirror_horizontal p =
+   p @ (flip_horizontal p)
