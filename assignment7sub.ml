@@ -91,3 +91,6 @@ let string_of_row r =
 let string_of_pic p =
    let s = List.map (string_of_row) p in
    List.fold_left (^) "" s
+
+let flip_vertical p =
+   List.rev p
