@@ -97,3 +97,6 @@ let flip_vertical p =
 
 let flip_horizontal p =
    List.map (List.rev) p
+
+let flip_both p =
+   flip_vertical (flip_horizontal p)
