@@ -104,5 +104,11 @@ let flip_both p =
 let mirror_vertical p =
    p @ (flip_vertical p)
 
-let mirror_horizontal p =
-   p @ (flip_horizontal p)
+let rec mirror_horizontal p =
+   (* make non-recursive when finished *)
+   match p with
+   | [] -> []
+   | x :: xs -> (x @ (List.rev x)) :: mirror_horizontal xs
+
+let mirror_both p =
+   mirror_vertical (mirror_horizontal p)
