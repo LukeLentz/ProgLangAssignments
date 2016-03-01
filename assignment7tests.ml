@@ -17,4 +17,6 @@ let t8a = flip_both [[H;D;D];[D;D;H]] = [[H;D;D];[D;D;H]]
 
 let t9a = mirror_vertical [[D;D;H];[H;D;D]]  = [[D;D;H];[H;D;D];[H;D;D];[D;D;H]] 
 
-let t10a = mirror_horizontal [[D;D;H]] = [[D;D;H];[H;D;D]]
+let t10a = mirror_horizontal [[D;D;H]] = [[D;D;H;H;D;D]]
+
+let t11a = mirror_both [[D;D;H];[H;H;D]] = [[D;D;H;H;D;D];[H;H;D;D;H;H];[H;H;D;D;H;H];[D;D;H;H;D;D]]

@@ -112,3 +112,12 @@ let rec mirror_horizontal p =
 
 let mirror_both p =
    mirror_vertical (mirror_horizontal p)
+
+let stack_vertical p1 p2 =
+   if (List.hd p1) != (List.hd p2)
+   then raise (Failure "IncompatibleDims")
+   else p1 @ p2
+
+let stack_horizontal p1 p2 =
+   List.fold_right2 @ p1 p2 []
+
