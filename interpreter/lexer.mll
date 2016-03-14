@@ -13,8 +13,12 @@ let white = [' ' '\t' '\n' '\r']+ | "//" ([^ '\n' '\r'])*
 let newline = '\n' | '\r' | "\r\n"
 let dblsemi = ";;"
 let float = (digit+ '.'? | digit* frac) exp?
+let true = "true" | "#t"
+let false = "false" | "#f"
 
 rule token = parse
+  | true          {TRUE}
+  | false         {FALSE}
   | white       { token lexbuf }
   | newline     { token lexbuf }
   | dblsemi     { DBLSEMI }
