@@ -24,3 +24,9 @@ let t0f = let env1 = bind "x" (Bool false) empty
 let t0g = desugar (BoolS true) = BoolC true
 
 let t0h = evaluate (desugar (BoolS true)) = Bool true 
+
+let t0i = evaluate (IfC (BoolC true, NumC 1.0, NumC 2.0)) = Num 1.0
+
+let t0j = evaluate (IfC (BoolC false, NumC 1.0, NumC 2.0)) = Num 2.0
+
+let t0k = desugar (IfS (BoolS false, NumS 1.0, NumS 2.0)) = IfC (BoolC false, NumC 1.0, NumC 2.0)
