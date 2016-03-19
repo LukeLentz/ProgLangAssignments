@@ -2,10 +2,10 @@ exception Desugar of string      (* Use for desugarer errors *)
 exception Interp of string       (* Use for interpreter errors *)
 
 (* You will need to add more cases here. *)
-type exprS = NumS of float | BoolS of bool | IfS of (exprS * exprS * exprS)
+type exprS = NumS of float | BoolS of bool | IfS of (exprS * exprS * exprS) | AndS of (exprS * exprS) | OrS of (exprS * exprS) | NotS of exprS
 
 (* You will need to add more cases here. *)
-type exprC = NumC of float | BoolC of bool | IfC of (exprC * exprC * exprC)
+type exprC = NumC of float | BoolC of bool | IfC of (exprC * exprC * exprC) | ArithC of (string * exprC * exprC)
 
 
 (* You will need to add more cases here. *)
@@ -35,6 +35,9 @@ let rec desugar exprS = match exprS with
   | NumS i        -> NumC i
   | BoolS b       -> BoolC b
   | IfS (a, b, c) -> IfC (desugar a, desugar b, desugar c)
+  | AndS (a, b)   -> desugar (IfS (a, IfS (b, BoolS true, BoolS false), BoolS false))
+  | OrS (a, b)  -> desugar (IfS (a, BoolS true, (IfS (b, BoolS true, BoolS false))))
+  | NotS a       -> desugar (IfS (a, BoolS false, BoolS true))
 
 (* You will need to add cases here. *)
 (* interp : Value env -> exprC -> value *)
@@ -57,3 +60,14 @@ let evaluate exprC = exprC |> interp []
 let rec valToString r = match r with
   | Num i           -> string_of_float i
   | Bool b          -> string_of_bool b
+
+let arithEval op v1 v2 =
+    match (v1, v2) with
+    | (Num v1, Num v2)  -> match op with
+                                | "+"  -> Num (v1 +. v2)
+                                | "-"  -> Num (v1 -. v2)
+                                | "*"  -> Num (v1 *. v2)
+                                | "/"  -> if (v2 = 0.0) 
+                                             then raise (Failure "Interp")
+                                             else Num (v1 /. v2)
+                                | _  -> raise (Failure "Interp")
