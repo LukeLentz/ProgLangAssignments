@@ -17,11 +17,17 @@ let true = "true" | "#t"
 let false = "false" | "#f"
 
 rule token = parse
-  | true          {TRUE}
-  | false         {FALSE}
-  | white       { token lexbuf }
-  | newline     { token lexbuf }
-  | dblsemi     { DBLSEMI }
-  | float as x  { FLOAT (float_of_string x) }
+  | "if"                { IF }
+  | "then"           { THEN }
+  | "else"         { ELSE }
+  | "or"                { OR }
+  | "and"               { AND }
+  | "not"               { NOT }
+  | true            { TRUE }
+  | false          { FALSE }
+  | white          { token lexbuf }
+  | newline      { token lexbuf }
+  | dblsemi      { DBLSEMI }
+  | float as x    { FLOAT (float_of_string x) }
   | eof         { raise Eof }
   | any         { raise Unrecognized }
