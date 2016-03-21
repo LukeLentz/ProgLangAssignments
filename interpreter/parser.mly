@@ -5,12 +5,20 @@
 %token IF THEN ELSE
 %token OR AND NOT
 %token TRUE FALSE
+%token PLUS MINUS TIMES DIVIDE
+%token EQ
+%token NEQ
 %token <float> FLOAT
+%token <string> COMPOP
 %token DBLSEMI
 %nonassoc FLOAT
 %nonassoc ELSE
 %left OR AND
+%nonassoc EQ NEQ
 %nonassoc NOT
+%nonassoc COMPOP
+%left PLUS MINUS
+%left TIMES DIVIDE
 
 %start main
 %type <Types.exprS> main
@@ -32,5 +40,12 @@ expr:
   | expr OR expr                                    { IfS ($1, BoolS true, (IfS ($3, BoolS true, BoolS false))) }
   | expr AND expr                                 { IfS ($1, (IfS ($3, BoolS true, BoolS false)), BoolS false) }
   | NOT expr                                            { IfS ($2, BoolS false, BoolS true) }
+  | expr PLUS expr                                  { ArithS ("+", $1, $3) }
+  | expr MINUS expr                                 { ArithS ("-", $1, $3) }
+  | expr TIMES expr                                 { ArithS ("*", $1, $3) }
+  | expr DIVIDE expr                                { ArithS ("/", $1, $3) }
+  | expr COMPOP expr                            { CompS ($2, $1, $3) }
+  | expr EQ expr                                        { EqS ($1, $3) }
+  | expr NEQ expr                                   { NeqS ($1, $3) }
 ;
 

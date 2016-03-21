@@ -15,6 +15,7 @@ let dblsemi = ";;"
 let float = (digit+ '.'? | digit* frac) exp?
 let true = "true" | "#t"
 let false = "false" | "#f"
+let comp = ">" | ">=" | "<" | "<="
 
 rule token = parse
   | "if"                { IF }
@@ -29,5 +30,12 @@ rule token = parse
   | newline      { token lexbuf }
   | dblsemi      { DBLSEMI }
   | float as x    { FLOAT (float_of_string x) }
+  | comp as s       { COMPOP s }
+  | "+"                { PLUS }
+  | "-"                 { MINUS }
+  | "*"                 { TIMES }
+  | "/"                     { DIVIDE }
   | eof         { raise Eof }
   | any         { raise Unrecognized }
+  | "=="        { EQ }
+  | "!="            { NEQ }
