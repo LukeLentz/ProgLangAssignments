@@ -64,8 +64,8 @@ let compEval op v1 v2 =
 
 let eqEval v1 v2 =
     match (v1, v2) with
-    | (Num x, Num y) -> Bool (x == y)
-    | (Bool x, Bool y) -> Bool (Bool x == Bool y)
+    | (Num x, Num y) -> Bool (x = y)
+    | (Bool x, Bool y) -> Bool (x = y)
     | _ -> Bool false
 
 (* interp : Value env -> exprC -> value *)
@@ -76,13 +76,19 @@ let rec interp env r = match r with
                                     | (NumC v, NumC n) -> arithEval op (Num v) (Num n)
                                     | (NumC v, ArithC n) -> arithEval op (Num v) (interp [] (ArithC n))
                                     | (ArithC v, NumC n) -> arithEval op (interp [] (ArithC v)) (Num n)
-                                    | (ArithC v, ArithC n) -> arithEval op (interp [] (ArithC v)) (interp [] (ArithC n)) )
-  | CompC (op, NumC x, NumC y) -> compEval op (Num x) (Num y)
+                                    | (ArithC v, ArithC n) -> arithEval op (interp [] (ArithC v)) (interp [] (ArithC n))
+                                    | _ -> raise (Failure "Interp") )
+  | CompC (op, x, y) -> (match (x, y) with
+                                      | (NumC x, NumC y) -> compEval op (Num x) (Num y)
+                                      | _ -> raise (Failure "Interp"))
   | EqC (x, y) -> eqEval (interp [] x) (interp [] y)
   | IfC (a, b, c)    -> match a with
                                 | BoolC a -> (match a with
                                                     | true -> interp [] b
                                                     | false -> interp []c)
+                                | EqC e -> (match interp [] (EqC e) with
+                                                  | Bool true -> interp [] b
+                                                  | Bool false -> interp [] c)
                                 | _ -> raise (Failure "Interp")
 
 
