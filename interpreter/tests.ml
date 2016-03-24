@@ -56,3 +56,23 @@ let t4g = try evaluate (ArithC ("/", NumC 3.0, NumC 0.0)) with
 let t4h = try evaluate (ArithC ("a", NumC 3.0, NumC 1.0)) with
                     | Failure "Interp" -> Bool true
                     | _ -> Bool false
+
+let t5a = evaluate (desugar (CompS ("<", NumS 1.0, NumS 2.0))) = Bool true
+
+let t5b = evaluate (desugar (CompS ("<", NumS 1.0, NumS 1.0))) = Bool false
+
+let t5c = evaluate (desugar (CompS ("<=", NumS 1.0, NumS 1.0))) = Bool true
+
+let t5d = evaluate (desugar (CompS (">=", NumS 1.0, NumS 2.0))) = Bool false
+
+let t5e = evaluate (desugar (CompS (">", NumS 2.0, NumS 1.0))) = Bool true
+
+let t5f = try evaluate (desugar (CompS ("a", NumS 1.0, NumS 1.0))) with
+                    | Failure "Interp" -> Bool true
+                    | _ -> Bool false
+
+let t6a = evaluate (EqC (NumC 1.0, NumC 1.0)) = Bool true
+
+let t6b = evaluate (EqC (NumC 1.0, NumC 3.0)) = Bool false
+
+let t6c = evaluate (desugar (NeqS (NumS 1.0, NumS 3.0))) = Bool true
