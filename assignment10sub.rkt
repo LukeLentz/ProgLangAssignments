@@ -34,7 +34,7 @@
 ;; This should be a simple consing of a binding.
 ;;
 (define (bind s v env)
-  #f)       ;   <----- Need to implement this
+    (cons (binding s v) env))
 
 ;;
 ;; TODO: Implement the function lookup, that looks for the symbol s in
