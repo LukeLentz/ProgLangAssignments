@@ -113,8 +113,8 @@
               (valid-program? (arith-e1 e))
               (valid-program? (arith-e2 e)))]
     [(var? e)(symbol? e)]
-    [(num? e)]
-    [(bool? e)]
+    [(num? e)(number? (num-n e))]
+    [(bool? e)(boolean? (bool-b e))]
     [(comp? e)
      (and (memq (comp-op e)(list '< '<= '>= '>))
           (valid-program? (comp-e1 e))
