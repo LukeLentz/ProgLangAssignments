@@ -42,14 +42,18 @@
 ;; value v stored in the binding.
 ;; It should throw an appropriate "lookup failed" error if it can't find
 ;; the symbol.
+
 (define (lookup s env)
-  (error (string-append "lookup: symbol not defined: "
-                        (symbol->string s))))
+  (cond
+    [(null? env)(raise (error "lookup failed"))]
+    [(eq? s (binding-s (car env)))(binding-v (car env))]
+    [else (lookup s (cdr env))]))
 
 ;;            THE LANGUAGE
 ;; We define the language in terms of structs.
 ;; We will treat the bool and num structs as both expressions and values
 ;; So your interpreter should be producing num or bool structs (or closures)
+
 (struct var (s) #:transparent)
 (struct num (n) #:transparent)
 (struct bool (b) #:transparent)
@@ -101,12 +105,47 @@
 ;;
 ;; The arith case is done for you as an example.
 ;; You will need to add many more cases to the cond.
+
 (define (valid-program? e)
-  (cond [(arith? e)
+  (cond 
+    [(arith? e)
          (and (memq (arith-op e) (list '+ '* '- '/))
               (valid-program? (arith-e1 e))
               (valid-program? (arith-e2 e)))]
-        [else #f]))
+    [(var? e)(symbol? e)]
+    [(num? e)]
+    [(bool? e)]
+    [(comp? e)
+     (and (memq (comp-op e)(list '< '<= '>= '>))
+          (valid-program? (comp-e1 e))
+          (valid-program? (comp-e2 e)))]
+     [(if-e? e)
+      (and (valid-program? (if-e-tst e))
+           (valid-program? (if-e-thn e))
+           (valid-program? (if-e-els e)))]
+     [(eq-e? e)
+      (and (valid-program? (eq-e-e1 e))
+           (valid-program? (eq-e-e2 e)))]
+     [(let-e? e)
+      (and (valid-program? (let-e-s e))
+           (valid-program? (let-e-e1 e))
+           (valid-program? (let-e-e2 e)))]
+     [(fun? e)
+      (and (valid-program? (fun-arg e))
+           (or (eq? (fun-name e) #f)
+               (and (not (eq? (fun-name e)(fun-arg e)))
+                    (valid-program? (fun-name e)))))]
+     [(call? e)
+      (and (valid-program? (call-e1 e))
+           (valid-program? (call-e2 e)))]
+     [(nul? e)#t]
+     [(isnul? e)(valid-program? e)]
+     [(pair-e? e)
+      (and (valid-program? (pair-e-e1 e))
+           (valid-program? (pair-e-e2 e)))]
+     [(fst? e)(valid-program? e)]
+     [(snd? e)(valid-program? e)]))
+     
 
 
 ;;     VALUES
