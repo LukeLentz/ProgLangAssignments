@@ -163,9 +163,15 @@
 ;;
 ;; Do this as a big "or". The first step is done for you, you need to
 ;; add the rest.
+
 (define (value? e)
   (or (num? e)
-      #f))      ;; <---- Need to change this
+      (bool? e)
+      (nul? e)
+      (clos? e)
+      (and  (pair-e? e)
+                (value? (pair-e-e1 e))
+                (value? (pair-e-e2 e)))))
 
 ;; TODO: Write a function `value-eq?` to test if two values are "equal".
 ;; Two values `v1`, `v2` are considered equal in the following cases:
@@ -175,10 +181,17 @@
 ;; - They are both `nul`s.
 ;; - They are both `pair`s and their corresponding components are equal.
 ;; - Nothing else is equal (e.g. two closures cannot equal each other)
+
 (define (value-eq? v1 v2)
-  (cond [(and (num? v1) (num? v2))
+  (cond 
+    [(and (num? v1) (num? v2))
          (equal? (num-n v1) (num-n v2))]
-        [else #f]))          ;; <---- Need to add more cases
+    [(and (bool? v1)(bool? v2))
+     (equal? (bool-b v1)(bool-b v2))]
+    [(and (nul? v1)(nul? v2))]
+    [(and (pair-e? v1)(pair-e? v2))
+     (equal? (pair-e v1)(pair-e v2))]
+    [else #f]))
               
 
 ;;       INTERPRETATION
@@ -233,8 +246,12 @@
 ;; and interprets the expression in the environment based on the above
 ;; description.
 ;; Some cases done for you.
+
 (define (interp env e)
   (cond [(num? e) e]
+        [(bool? e) e]
+        [(nul? e) e]
+        [(var? e)(lookup e env)]
         [(arith? e)
          (let ([v1 (interp env (arith-e1 e))]
                [v2 (interp env (arith-e2 e))]
@@ -243,6 +260,41 @@
            (if (and (num? v1) (num? v2))
                (num (op (num-n v1) (num-n v2)))
                (error "interp: arithmetic on non-numbers")))]
+        [(comp? e)
+         (if (and (num? (comp-e1 e))
+                  (num? (comp-e2 e)))
+             ((comp-op e)(interp env (comp-e1 e))(interp env (comp-e2 e)))
+             (raise (error "Can only compare nums")))]
+        [(if-e? e)
+         (cond
+           [(interp env (if-e-tst e))(if-e-thn e)]
+           [(interp env (if-e-tst e))(if-e-els e)]
+           [else (raise (error "tst is not a bool"))])]
+        [(eq-e? e)(value-eq? (eq-e-e1 e)(eq-e-e2 e))]
+        [(let-e? e)
+         (bind (let-e-s e)(let-e-e1 e)(env))
+         (let-e-e2 e)]
+        [(fun? e)(cons e env)]
+        ;; need to find out how to get name of f in clos
+
+        [(call? e)
+         (cond
+           [(not (clos? (call-e1 e)))(raise (error "Not a closure"))]
+           [else (if (eq? (clos-f-name e) #f)
+                     (interp (clos-env e) ((clos-f e)-body))
+                     (and (bind ((clos-f e)-name)((clos-f e)-body) env)
+                          (interp env ((clos-f e)-body))))])]
+                          
+        [(isnul? e)(nul? e)]
+        [(pair-e? e)(cons (interp env (pair-e-e1 e))(interp env (pair-e-e2 e)))]
+        [(fst? e)
+         (if (pair-e? e)
+             (pair-e-e1 e)
+             (raise (error "Not a pair")))]
+        [(snd ? e)
+         (if (pair-e? e)
+             (pair-e-e2 e)
+             (raise (error "Not a pair")))]
         [else (error "interp: unknown expression")]))
  
 ;;         EVALUATE
