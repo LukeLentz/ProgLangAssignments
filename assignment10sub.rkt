@@ -261,37 +261,40 @@
                (num (op (num-n v1) (num-n v2)))
                (error "interp: arithmetic on non-numbers")))]
         [(comp? e)
-         (if (and (num? (comp-e1 e))
-                  (num? (comp-e2 e)))
-             ((comp-op e)(interp env (comp-e1 e))(interp env (comp-e2 e)))
-             (raise (error "Can only compare nums")))]
+         (let ([v1 (interp env (comp-e1 e))]
+               [v2 (interp env (comp-e2 e))]
+               [op (case (comp-op e)
+                     ['< <]
+                     ['<= <=]
+                     ['> >]
+                     ['>= >=])])
+           (if (and (num? v1)(num? v2))
+               (bool (op (num-n v1)(num-n v2)))
+               (error "Interp: can only compare numbers")))]
         [(if-e? e)
          (cond
            [(interp env (if-e-tst e))(if-e-thn e)]
            [(interp env (if-e-tst e))(if-e-els e)]
-           [else (raise (error "tst is not a bool"))])]
+           [else (error "tst is not a bool")])]
         [(eq-e? e)(value-eq? (eq-e-e1 e)(eq-e-e2 e))]
         [(let-e? e)
          (bind (let-e-s e)(let-e-e1 e)(env))
          (let-e-e2 e)]
         [(fun? e)(cons e env)]
-        ;; need to find out how to get name of f in clos
-
         [(call? e)
          (cond
-           [(not (clos? (call-e1 e)))(raise (error "Not a closure"))]
-           [else (if (eq? (clos-f-name e) #f)
-                     (interp (clos-env e) ((clos-f e)-body))
-                     (and (bind ((clos-f e)-name)((clos-f e)-body) env)
-                          (interp env ((clos-f e)-body))))])]
-                          
+           [(not (clos? (call-e1 e)))(error "Not a closure")]
+           [else (let-e 'n' (clos-f e) ((if (eq? 'n'-name #f)
+                     (interp (clos-env e) 'n'-body)
+                     (and (bind ('n'-name)('n'-body) env)
+                          (interp env ('n'-body))))))])]  
         [(isnul? e)(nul? e)]
         [(pair-e? e)(cons (interp env (pair-e-e1 e))(interp env (pair-e-e2 e)))]
         [(fst? e)
          (if (pair-e? e)
              (pair-e-e1 e)
              (raise (error "Not a pair")))]
-        [(snd ? e)
+        [(snd? e)
          (if (pair-e? e)
              (pair-e-e2 e)
              (raise (error "Not a pair")))]
@@ -326,8 +329,9 @@
 ;; TODO: Write a function `neq` that takes as input two source language
 ;; expressions and returns the expression that tests that they are not
 ;; equal. This should be a combination of `not-e` and `eq-e`.
+
 (define (neq e1 e2)
-  #f)      ; <---- Need to fix this
+  (not-e (eq-e e1 e2)))
 
 ;; TODO: Write a function `or2` that takes as input two source language
 ;; expressions `e1` and `e2` and returns the appropriate `if-e` expression
