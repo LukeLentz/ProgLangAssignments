@@ -64,6 +64,12 @@
 (with-handlers ([exn:fail? (lambda (exn) #f)])
   (equal? (evaluate (comp '< (num 3) (num 2)))
           (bool #f)))
+(equal? (if-e (bool #t) (num 1) (num 2))
+         (num 1))
+(equal? (if-e (bool #f) (num 1) (num 2))
+        (num 2))
+(equal? (eq-e (bool #t) (comp '< (num 1) (num 2)))
+            (bool #t))
 
 
 ;; neq
