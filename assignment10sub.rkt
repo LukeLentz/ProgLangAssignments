@@ -406,7 +406,7 @@
     (syntax-rules ()
         [(mult) (num 1)]
         [(mult e1) (num e1)]
-        [(mult e1 e2 ...)]))
+        [(mult e1 e2 ...) #f]))
 
 
 
