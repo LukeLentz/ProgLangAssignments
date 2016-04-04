@@ -276,7 +276,7 @@
                (interp env (if-e-thn e))
                (interp env (if-e-els e)))
            (error "interp of non-bool")))]
-    [(eq-e? e)(value-eq? (interp env (eq-e-e1 e)) (interp env (eq-e-e2 e)))]
+    [(eq-e? e) (bool (value-eq? (interp env (eq-e-e1 e)) (interp env (eq-e-e2 e))))]
     [(let-e? e)
      (bind (let-e-s e)(let-e-e1 e) env)
      (interp env (let-e-e2))]
@@ -363,15 +363,15 @@
 
 (define or-e
   (lambda es
-    (if (nul? es)
+    (if (null? es)
         (bool #f)
-        (foldr (if-e (car es)(bool #t)(or-e (cdr es))) '() es))))
-  
+        (foldr (if-e (fst es) (bool #t) (or-e (snd es))) '() es))))
 
 ;; TODO: We will similarly do something for `and-e`, but for this one
 ;; we will instead build a macro. For no arguments, this should return
 ;; the language bool for true.
 ;; The two base cases are done for you.
+
 (define-syntax and-e
   (syntax-rules ()
     [(and-e) (bool #t)]
@@ -396,6 +396,17 @@
 ;; You can choose either a macro approach like in `and-e` or a function
 ;; approach and `foldr` like in `or-e`.
 
+(define-syntax plus
+    (syntax-rules ()
+        [(plus) (num 0)]
+        [(plus e1) (num e1)]
+        [(plus e1 e2 ...) #f]))
+
+(define-syntax mult
+    (syntax-rules ()
+        [(mult) (num 1)]
+        [(mult e1) (num e1)]
+        [(mult e1 e2 ...)]))
 
 
 
@@ -407,6 +418,11 @@
 ;; Try out the function `-` in Racket to see examples of the behavior.
 ;; Do this as a macro, similar to `and-e`.
 
+(define-syntax minus
+    (syntax-rules ()
+        [(minus) (num 0)]
+        [(minus e) #f]
+        [(minus e1 e2 ...) #f]))
 
 
 
