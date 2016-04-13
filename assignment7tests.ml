@@ -25,5 +25,9 @@ let t12a = stack_vertical [[D;D;D]] [[H;H;H]] = [[D;D;D];[H;H;H]]
 let t12b = try (stack_vertical [[D;D]] [[H]]; false) with
                                                 | Failure "IncompatibleDims" -> true
                                                 | _ -> false
+let t13a = stack_horizontal [[D;D;D]] [[H;H;H]] = [[D;D;D;H;H;H]]
+let t13b = try (stack_horizontal [[D;D;D];[D;D;D]] [[H;H]]; false) with
+                                                    | Failure "IncompatibleDims" -> true
+                                                    | _ -> false
 
 let t14a = invert [D;D;H] = [H;H;D]

@@ -85,12 +85,10 @@ let string_of_pxl pxl =
    | H -> "#"
 
 let string_of_row r =
-   let s = List.map (string_of_pxl) r in
-   (List.fold_left (^) "" s) ^ "\n"
+   (List.fold_left (^) "" (List.map (string_of_pxl) r)) ^ "\n"
 
 let string_of_pic p =
-   let s = List.map (string_of_row) p in
-   List.fold_left (^) "" s
+   List.fold_left (^) "" (List.map (string_of_row) p)
 
 let flip_vertical p =
    List.rev p
@@ -104,17 +102,19 @@ let flip_both p =
 let mirror_vertical p =
    p @ (flip_vertical p)
 
-let rec mirror_horizontal p =
-   (* make non-recursive when finished *)
-   match p with
-   | [] -> []
-   | x :: xs -> (x @ (List.rev x)) :: mirror_horizontal xs
+let mirror_horizontal p =
+    List.map (fun l -> l @ (List.rev l)) p
 
 let mirror_both p =
    mirror_vertical (mirror_horizontal p)
 
 let stack_vertical p1 p2 =
-   let (x, y) = dims_pic p1 in
-   let (m, n) = dims_pic p2 in
-   if y <> n then raise (Failure "IncompatibleDims") else p1 @ p2
+    let (x, y) = dims_pic p1 and (m, n) = dims_pic p2 in
+    if y <> n then raise (Failure "IncompatibleDims") else p1 @ p2
+
+let stack_horizontal p1 p2 =
+    let (x, y) = dims_pic p1 and (m, n) = dims_pic p2 in
+    if x <> m
+    then raise (Failure "IncompatibleDims")
+    else List.map2 (fun a b -> a @ b) p1 p2
 
