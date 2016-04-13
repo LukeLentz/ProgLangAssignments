@@ -118,3 +118,9 @@ let stack_horizontal p1 p2 =
     then raise (Failure "IncompatibleDims")
     else List.map2 (fun a b -> a @ b) p1 p2
 
+let rec transpose_r p =
+    match p with
+    | []                 -> []
+    | []   :: xss      -> transpose_r xss
+    | (x::xs) :: xss ->
+        (x :: List.map List.hd xss) :: transpose_r (xs :: List.map List.tl xss)
