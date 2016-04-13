@@ -118,6 +118,12 @@ let stack_horizontal p1 p2 =
     then raise (Failure "IncompatibleDims")
     else List.map2 (fun a b -> a @ b) p1 p2
 
+let invert p =
+    List.map (List.map (fun pxl -> (match pxl with
+                                                    | D -> H
+                                                    | H -> D))) p
+
+
 let rec transpose_r p =
     match p with
     | []                 -> []

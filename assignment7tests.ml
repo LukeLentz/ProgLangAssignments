@@ -30,4 +30,4 @@ let t13b = try (stack_horizontal [[D;D;D];[D;D;D]] [[H;H]]; false) with
                                                     | Failure "IncompatibleDims" -> true
                                                     | _ -> false
 
-let t14a = invert [D;D;H] = [H;H;D]
+let t14a = invert [[D;D;H]] = [[H;H;D]]
