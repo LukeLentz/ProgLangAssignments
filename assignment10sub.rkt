@@ -398,13 +398,13 @@
     (syntax-rules ()
         [(plus) (num 0)]
         [(plus e1) (num e1)]
-        [(plus e1 e2 ...) #f]))
+        [(plus e1 e2 ...) (plus2 e1 (plus2 e2 ...))]))
 
 (define-syntax mult
     (syntax-rules ()
         [(mult) (num 1)]
         [(mult e1) (num e1)]
-        [(mult e1 e2 ...) #f]))
+        [(mult e1 e2 ...) (mult2 e1 (mult2 e2 ...))]))
 
 
 
