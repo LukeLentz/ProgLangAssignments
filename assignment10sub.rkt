@@ -363,9 +363,7 @@
 
 (define or-e
   (lambda es
-    (if (null? es)
-        (bool #f)
-        (foldr (if-e (fst es) (bool #t) (or-e (snd es))) '() es))))
+  (bool #f)))
 
 ;; TODO: We will similarly do something for `and-e`, but for this one
 ;; we will instead build a macro. For no arguments, this should return
@@ -376,7 +374,7 @@
   (syntax-rules ()
     [(and-e) (bool #t)]
     [(and-e e1) e1]
-    [(and-e e1 e2 ...) #f]))   ; <-- Need to fix this. Use and2 and "recursion"
+    [(and-e e1 e2 ...) (if-e (and-e e1) (and-e e2 ...) (bool #f))]))
 
 ;; TODO: Build a `let-e*` macro that takes input like:
 ;; `(let-e* ([s1 e1] [s2 e2] ...) e)` and creates the equivalent nested 
@@ -441,7 +439,7 @@
 ;; Do this as a function that uses `foldr`.
 (define racketlist->sourcelist
   (lambda (exps)
-    #f))        ;  <--- Replace this with an appropriate foldr call.
+    (foldr pair-e (fst exps) (snd exps))))
 
 ;; TODO: Write a source language expression `map-e`. It should be a 
 ;; `fun` that takes as input a "fun" `f` and returns a `fun` that takes
