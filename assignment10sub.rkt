@@ -363,7 +363,11 @@
 
 (define or-e
   (lambda es
-  (bool #f)))
+    (if (nul? es)
+        (bool #f)
+        (if (car es)
+            (bool #t)
+            (or-e (cdr es))))))
 
 ;; TODO: We will similarly do something for `and-e`, but for this one
 ;; we will instead build a macro. For no arguments, this should return
@@ -384,7 +388,7 @@
   (syntax-rules ()
     [(let-e* () e) e]
     [(let-e* ([s1 e1]) e) (let-e s1 e1 e)]
-    [(let-e* ([s1 e1] rest ...) e) #f]))  ; <-- Need to fix this.
+    [(let-e* ([s1 e1] rest ...) e) (bool #f)]))
 
 ;; TODO: Write functions or macros `plus`, and `mult` that take any number
 ;; of source language expressions as arguments and creates a corresponding
@@ -398,7 +402,7 @@
     (syntax-rules ()
         [(plus) (num 0)]
         [(plus e1) (num e1)]
-        [(plus e1 e2 ...) (plus2 e1 (plus2 e2 ...))]))
+        [(plus e1 e2 ...) (foldr + 0 '(e1 e2 ...))]))
 
 (define-syntax mult
     (syntax-rules ()
@@ -419,8 +423,8 @@
 (define-syntax minus
     (syntax-rules ()
         [(minus) (num 0)]
-        [(minus e) #f]
-        [(minus e1 e2 ...) #f]))
+        [(minus e) (minus2 (num 0) (num e))]
+        [(minus e1 e2 ...) (minus2 e1 (minus e2 ...))]))
 
 
 
